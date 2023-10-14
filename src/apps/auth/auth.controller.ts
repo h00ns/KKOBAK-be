@@ -42,7 +42,7 @@ export class AuthController {
 
     throw new HttpException(
       '비밀번호가 일치하지 않습니다.',
-      HttpStatus.UNAUTHORIZED,
+      HttpStatus.BAD_REQUEST,
     );
   }
 
