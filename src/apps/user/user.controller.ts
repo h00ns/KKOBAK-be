@@ -1,16 +1,15 @@
 import {
   Body,
   Controller,
-  Get,
   HttpException,
   HttpStatus,
   Post,
-  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { SignUpUserDto } from './dtos/signup-user.dto';
+import { SignUpUserDto } from './dtos/signup-user.dto';
 import { ApiResponse } from 'src/dtos/api-response.dto';
 import { User } from './entities/user.entity';
+import { CheckEmailValidDto } from './dtos/check-email-valid.dto';
 
 @Controller('user')
 export class UserController {
@@ -28,8 +27,8 @@ export class UserController {
     };
   }
 
-  @Get('/email')
-  async checkEmailValid(@Query('email') email: string) {
+  @Post('/email')
+  async checkEmailValid(@Body() { email }: CheckEmailValidDto) {
     const user = await this.userService.findUserByEmail({ email });
 
     if (user) {
