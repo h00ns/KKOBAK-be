@@ -11,14 +11,15 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  // 이메일 중복 체크
-  async checkEmailValid({ email }: { email: string }) {
+  // 이메일로 유저 검색
+  async findUserByEmail({ email }: { email: string }): Promise<User> {
     const user = await this.userRepository.findOne({ where: { email } });
-    return !!user;
+
+    return user;
   }
 
   // 회원가입
-  async signUp({ email, name, password }: SignUpUserDto) {
+  async signUp({ email, name, password }: SignUpUserDto): Promise<User> {
     const user = await this.userRepository.create({ email, name, password });
 
     return await this.userRepository.save(user);

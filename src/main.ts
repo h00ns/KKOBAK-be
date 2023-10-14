@@ -1,10 +1,13 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from './apps/app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { ApiResponseInterceptor } from './interceptors/api-response-interceptor';
+import { HttpExceptionFilter } from './filters/http-exception-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // 전역 Validation Pipe (유효성 검사)
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // 데코레이터가 없는 속성은 거른다.
@@ -13,6 +16,13 @@ async function bootstrap() {
     }),
   );
 
+  // 전역 Exception Filter (에러처리)
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // 전역 Api Response Interceptor (응답처리)
+  app.useGlobalInterceptors(new ApiResponseInterceptor());
+
+  // CORS 허용
   app.enableCors();
 
   await app.listen(3000);

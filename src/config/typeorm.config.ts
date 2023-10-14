@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/apps/user/entities/user.entity';
 
 /** typeORM 설정 (MySQL) */
 const typeOrmConfig: TypeOrmModuleOptions = {
