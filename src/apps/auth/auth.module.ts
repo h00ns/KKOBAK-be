@@ -8,7 +8,7 @@ import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt', session: false }),
+    PassportModule.register({ session: false }),
     UserModule,
     JwtModule.register({
       secret: 'SECRET', // verify signature에서 사용할 secret key

@@ -23,7 +23,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ApiResponseInterceptor());
 
   // CORS 허용
-  app.enableCors();
+  app.enableCors({ origin: 'http://localhost:5173' });
 
   await app.listen(3000);
 }
