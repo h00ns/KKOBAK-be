@@ -9,12 +9,12 @@ import {
 import { UserService } from './user.service';
 import { SignUpDto } from './dtos/signup.dto';
 import { ApiRes } from 'src/dtos/api-response.dto';
+import { User } from './entities/user.entity';
 import { CheckEmailValidDto } from './dtos/check-email-valid.dto';
 import { SendResetCodeDto } from './dtos/send-reset-code.dto';
 import { PatchPasswordDto } from './dtos/patch-password.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CheckEmailValidResponseDto } from './dtos/check-email-valid.response.dto';
-import { User } from './entities/user.entity';
 
 @ApiTags('user')
 @Controller('user')

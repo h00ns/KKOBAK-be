@@ -16,7 +16,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const exceptionResponse = exception.getResponse();
 
     const message = exceptionResponse.hasOwnProperty('message')
-      ? exceptionResponse['message']
+      ? Array.isArray(exceptionResponse['message'])
+        ? exceptionResponse['message'].join(', ')
+        : exceptionResponse['message']
       : exceptionResponse;
 
     response.status(status).json({

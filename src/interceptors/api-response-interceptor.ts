@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiResponse } from 'src/dtos/api-response.dto';
+import { ApiRes } from 'src/dtos/api-response.dto';
 
 @Injectable()
-export class ApiResponseInterceptor implements NestInterceptor {
+export class ApiResInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
       map((response) => {
@@ -21,7 +21,7 @@ export class ApiResponseInterceptor implements NestInterceptor {
         } = response ?? {};
 
         if (result) {
-          return new ApiResponse(result, message, code);
+          return new ApiRes(result, message, code);
         } else {
           return response;
         }

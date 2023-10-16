@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SignUpUserDto } from './dtos/signup-user.dto';
+import { SignUpDto } from './dtos/signup.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -25,7 +25,7 @@ export class UserService {
   }
 
   // 회원가입
-  async signUp({ email, name, password }: SignUpUserDto): Promise<User> {
+  async signUp({ email, name, password }: SignUpDto): Promise<User> {
     // password hash 암호화
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
