@@ -23,13 +23,8 @@ export class UserController {
 
   @Post('/')
   @ApiOperation({ summary: '회원가입' })
-  @ApiBody({
-    type: SignUpDto,
-  })
-  @ApiResponse({
-    status: 200,
-    type: User,
-  })
+  @ApiBody({ type: SignUpDto })
+  @ApiResponse({ status: 200, type: User })
   async signUp(
     @Body() { email, name, password }: SignUpDto,
   ): Promise<ApiRes<User>> {
@@ -43,12 +38,15 @@ export class UserController {
 
   @Post('/email')
   @ApiOperation({ summary: '이메일 중복 확인' })
-  @ApiBody({
-    type: CheckEmailValidDto,
-  })
+  @ApiBody({ type: CheckEmailValidDto })
   @ApiResponse({
     status: 200,
     type: CheckEmailValidResponseDto,
+    schema: {
+      example: {
+        isDuplicate: false,
+      },
+    },
   })
   async checkEmailValid(
     @Body() { email }: CheckEmailValidDto,
@@ -70,9 +68,7 @@ export class UserController {
 
   @Post('/reset')
   @ApiOperation({ summary: '비밀번호 재설정 코드 전송' })
-  @ApiBody({
-    type: SendResetCodeDto,
-  })
+  @ApiBody({ type: SendResetCodeDto })
   async sendResetCode(
     @Body() { email }: SendResetCodeDto,
   ): Promise<ApiRes<null>> {
@@ -95,12 +91,7 @@ export class UserController {
 
   @Patch('/password')
   @ApiOperation({ summary: '비밀번호 재설정' })
-  @ApiBody({
-    type: PatchPasswordDto,
-  })
-  @ApiResponse({
-    status: 200,
-  })
+  @ApiBody({ type: PatchPasswordDto })
   async patchPassword(
     @Body() { email, password, resetCode }: PatchPasswordDto,
   ): Promise<ApiRes<null>> {

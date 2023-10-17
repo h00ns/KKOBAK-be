@@ -28,13 +28,8 @@ export class AuthController {
 
   @Post('/login')
   @ApiOperation({ summary: '로그인' })
-  @ApiBody({
-    type: LoginDto,
-  })
-  @ApiResponse({
-    status: 200,
-    type: LoginResponseDto,
-  })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({ status: 200, type: LoginResponseDto })
   async login(
     @Body() { email, password }: LoginDto,
   ): Promise<ApiRes<LoginResponseDto>> {
@@ -66,13 +61,8 @@ export class AuthController {
 
   @Post('/refresh')
   @ApiOperation({ summary: '토큰 갱신' })
-  @ApiBody({
-    type: RefreshTokensDto,
-  })
-  @ApiResponse({
-    status: 200,
-    type: RefreshTokensResponseDto,
-  })
+  @ApiBody({ type: RefreshTokensDto })
+  @ApiResponse({ status: 200, type: RefreshTokensResponseDto })
   async refreshTokens(
     @Body() { refreshToken }: RefreshTokensDto,
   ): Promise<ApiRes<RefreshTokensResponseDto>> {
@@ -88,13 +78,8 @@ export class AuthController {
 
   @Post('/kakao')
   @ApiOperation({ summary: '카카오 로그인' })
-  @ApiBody({
-    type: KakaoLoginDto,
-  })
-  @ApiResponse({
-    status: 200,
-    type: KakaoLoginResponseDto,
-  })
+  @ApiBody({ type: KakaoLoginDto })
+  @ApiResponse({ status: 200, type: KakaoLoginResponseDto })
   async kakaoLogin(
     @Body() { email, name }: KakaoLoginDto,
   ): Promise<ApiRes<KakaoLoginResponseDto>> {
