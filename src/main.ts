@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './apps/app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { ApiResponseInterceptor } from './interceptors/api-response-interceptor';
+import { ApiResInterceptor } from './interceptors/api-response-interceptor';
 import { HttpExceptionFilter } from './filters/http-exception-filter';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,10 +21,22 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
 
   // 전역 Api Response Interceptor (응답처리)
-  app.useGlobalInterceptors(new ApiResponseInterceptor());
+  app.useGlobalInterceptors(new ApiResInterceptor());
 
   // CORS 허용
   app.enableCors({ origin: 'http://localhost:5173' });
+
+  // Swagger 설정
+  const document = SwaggerModule.createDocument(
+    app,
+    new DocumentBuilder()
+      .setTitle('KKOBAK api')
+      .setDescription('KKOBAK API description')
+      .setVersion('1.0.0')
+      .addTag('auth')
+      .build(),
+  );
+  SwaggerModule.setup('api', app, document); // http://localhost:3000/api 로 접근가능
 
   await app.listen(3000);
 }

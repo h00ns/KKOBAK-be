@@ -1,4 +1,4 @@
-export class ApiResponse<T> {
+export class ApiRes<T> {
   constructor(
     public result: T,
     public message: string,

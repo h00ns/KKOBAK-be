@@ -12,7 +12,13 @@ import * as bcrypt from 'bcryptjs';
 import { RefreshTokensDto } from './dtos/refresh-tokens.dto';
 import { KakaoLoginDto } from './dtos/kakao-login.dto';
 import { randomBytes } from 'crypto';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LoginResponseDto } from './dtos/login.response.dto';
+import { RefreshTokensResponseDto } from './dtos/refresh-tokens.response.dto';
+import { KakaoLoginResponseDto } from './dtos/kakao-login.response.dto';
+import { ApiRes } from 'src/dtos/api-response.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -21,7 +27,12 @@ export class AuthController {
   ) {}
 
   @Post('/login')
-  async login(@Body() { email, password }: LoginDto) {
+  @ApiOperation({ summary: '로그인' })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({ status: 200, type: LoginResponseDto })
+  async login(
+    @Body() { email, password }: LoginDto,
+  ): Promise<ApiRes<LoginResponseDto>> {
     const user = await this.userService.findUserByEmail({ email });
     if (!user) {
       throw new HttpException(
@@ -49,7 +60,12 @@ export class AuthController {
   }
 
   @Post('/refresh')
-  async refreshTokens(@Body() { refreshToken }: RefreshTokensDto) {
+  @ApiOperation({ summary: '토큰 갱신' })
+  @ApiBody({ type: RefreshTokensDto })
+  @ApiResponse({ status: 200, type: RefreshTokensResponseDto })
+  async refreshTokens(
+    @Body() { refreshToken }: RefreshTokensDto,
+  ): Promise<ApiRes<RefreshTokensResponseDto>> {
     const payload = this.authService.verifyRefreshToken(refreshToken);
 
     const { accessToken } = await this.authService.createToken(payload);
@@ -61,7 +77,12 @@ export class AuthController {
   }
 
   @Post('/kakao')
-  async kakaoLogin(@Body() { email, name }: KakaoLoginDto) {
+  @ApiOperation({ summary: '카카오 로그인' })
+  @ApiBody({ type: KakaoLoginDto })
+  @ApiResponse({ status: 200, type: KakaoLoginResponseDto })
+  async kakaoLogin(
+    @Body() { email, name }: KakaoLoginDto,
+  ): Promise<ApiRes<KakaoLoginResponseDto>> {
     const user = await this.userService.findUserByEmail({ email });
 
     if (user) {

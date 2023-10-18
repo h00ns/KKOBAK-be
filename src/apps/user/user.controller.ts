@@ -7,21 +7,27 @@ import {
   Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { SignUpUserDto } from './dtos/signup-user.dto';
-import { ApiResponse } from 'src/dtos/api-response.dto';
-import { User } from './entities/user.entity';
+import { SignUpDto } from './dtos/signup.dto';
+import { ApiRes } from 'src/dtos/api-response.dto';
 import { CheckEmailValidDto } from './dtos/check-email-valid.dto';
 import { SendResetCodeDto } from './dtos/send-reset-code.dto';
 import { PatchPasswordDto } from './dtos/patch-password.dto';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CheckEmailValidResponseDto } from './dtos/check-email-valid.response.dto';
+import { User } from './entities/user.entity';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(readonly userService: UserService) {}
 
   @Post('/')
+  @ApiOperation({ summary: '회원가입' })
+  @ApiBody({ type: SignUpDto })
+  @ApiResponse({ status: 200, type: User })
   async signUp(
-    @Body() { email, name, password }: SignUpUserDto,
-  ): Promise<ApiResponse<User>> {
+    @Body() { email, name, password }: SignUpDto,
+  ): Promise<ApiRes<User>> {
     const user = await this.userService.signUp({ email, name, password });
 
     return {
@@ -31,7 +37,20 @@ export class UserController {
   }
 
   @Post('/email')
-  async checkEmailValid(@Body() { email }: CheckEmailValidDto) {
+  @ApiOperation({ summary: '이메일 중복 확인' })
+  @ApiBody({ type: CheckEmailValidDto })
+  @ApiResponse({
+    status: 200,
+    type: CheckEmailValidResponseDto,
+    schema: {
+      example: {
+        isDuplicate: false,
+      },
+    },
+  })
+  async checkEmailValid(
+    @Body() { email }: CheckEmailValidDto,
+  ): Promise<ApiRes<CheckEmailValidResponseDto>> {
     const user = await this.userService.findUserByEmail({ email });
 
     if (user) {
@@ -48,7 +67,11 @@ export class UserController {
   }
 
   @Post('/reset')
-  async sendResetCode(@Body() { email }: SendResetCodeDto) {
+  @ApiOperation({ summary: '비밀번호 재설정 코드 전송' })
+  @ApiBody({ type: SendResetCodeDto })
+  async sendResetCode(
+    @Body() { email }: SendResetCodeDto,
+  ): Promise<ApiRes<null>> {
     const user = await this.userService.findUserByEmail({ email });
 
     if (!user) {
@@ -67,9 +90,11 @@ export class UserController {
   }
 
   @Patch('/password')
+  @ApiOperation({ summary: '비밀번호 재설정' })
+  @ApiBody({ type: PatchPasswordDto })
   async patchPassword(
     @Body() { email, password, resetCode }: PatchPasswordDto,
-  ) {
+  ): Promise<ApiRes<null>> {
     const user = await this.userService.findUserByEmail({ email });
 
     if (!user) {

@@ -1,9 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
 
-export class RefreshTokensDto {
-  @IsString()
-  @IsNotEmpty()
+export class KakaoLoginResponseDto {
+  @ApiProperty({
+    example: 'zxcasdqwe123qweasdzxc123==',
+  })
+  accessToken: string;
+
   @ApiProperty({
     example: 'zxcasdqwe123qweasdzxc123==',
   })
