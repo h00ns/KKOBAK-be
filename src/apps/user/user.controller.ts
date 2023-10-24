@@ -1,10 +1,14 @@
+import { User } from 'src/apps/user/entities/user.entity';
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Patch,
   Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SignUpDto } from './dtos/signup.dto';
@@ -14,12 +18,39 @@ import { SendResetCodeDto } from './dtos/send-reset-code.dto';
 import { PatchPasswordDto } from './dtos/patch-password.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CheckEmailValidResponseDto } from './dtos/check-email-valid.response.dto';
-import { User } from './entities/user.entity';
+import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
+import { GetUserInfoResponseDto } from './dtos/get-user-info-response.dto';
+import { PatchSalaryDayDto } from './dtos/patch-salaryday.dto';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(readonly userService: UserService) {}
+
+  @Get('/')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '유저 자신의 정보 조회' })
+  @ApiResponse({ status: 200, type: GetUserInfoResponseDto })
+  async getUserInfo(@Req() req): Promise<ApiRes<GetUserInfoResponseDto>> {
+    const { id } = req.user;
+    const user = await this.userService.findUserById({ id });
+
+    // 비밀번호, 재설정코드는 제외
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, resetCode, ...restUser } = user;
+
+    if (user) {
+      return {
+        result: restUser,
+        message: '유저 정보 조회가 완료되었습니다.',
+      };
+    }
+
+    throw new HttpException(
+      '유저가 존재하지 않습니다.',
+      HttpStatus.BAD_REQUEST,
+    );
+  }
 
   @Post('/')
   @ApiOperation({ summary: '회원가입' })
@@ -42,11 +73,6 @@ export class UserController {
   @ApiResponse({
     status: 200,
     type: CheckEmailValidResponseDto,
-    schema: {
-      example: {
-        isDuplicate: false,
-      },
-    },
   })
   async checkEmailValid(
     @Body() { email }: CheckEmailValidDto,
@@ -117,5 +143,31 @@ export class UserController {
       result: null,
       message: '비밀번호가 변경되었습니다.',
     };
+  }
+
+  @Patch('/salary')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '월급일 변경' })
+  @ApiBody({ type: PatchSalaryDayDto })
+  async patchSalaryDay(
+    @Req() req,
+    @Body() { salaryDay }: PatchSalaryDayDto,
+  ): Promise<ApiRes<null>> {
+    const { id } = req.user;
+    const user = await this.userService.findUserById({ id });
+
+    if (user) {
+      await this.userService.patchSalaryDay({ id, salaryDay });
+
+      return {
+        result: null,
+        message: '월급일이 변경되었습니다.',
+      };
+    }
+
+    throw new HttpException(
+      '유저가 존재하지 않습니다.',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 }
