@@ -24,6 +24,13 @@ export class UserService {
     return user;
   }
 
+  // 아이디로 유저 검색
+  async findUserById({ id }: { id: number }): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    return user;
+  }
+
   // 회원가입
   async signUp({ email, name, password }: SignUpDto): Promise<User> {
     // password hash 암호화
@@ -71,5 +78,10 @@ export class UserService {
       { email },
       { password: hashedPassword, resetCode: null },
     );
+  }
+
+  // 월급일 변경
+  async patchSalaryDay({ id, salaryDay }: { id: number; salaryDay: number }) {
+    await this.userRepository.update({ id }, { salaryDay });
   }
 }
