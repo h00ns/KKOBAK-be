@@ -20,7 +20,8 @@ export class ApiResInterceptor implements NestInterceptor {
           code = HttpStatus.OK,
         } = response ?? {};
 
-        if (result) {
+        // null도 넣어주는 값이므로 성공으로 취급
+        if (result || result === null) {
           return new ApiRes(result, message, code);
         } else {
           return response;

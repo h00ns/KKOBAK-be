@@ -9,9 +9,9 @@ import mailerConfig from 'src/config/mailer.config';
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeOrmConfig),
+    MailerModule.forRoot(mailerConfig),
     UserModule,
     AuthModule,
-    MailerModule.forRoot(mailerConfig),
   ],
   controllers: [],
   providers: [],

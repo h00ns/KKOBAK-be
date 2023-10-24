@@ -30,8 +30,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(
     app,
     new DocumentBuilder()
-      .setTitle('KKOBAK api')
-      .setDescription('KKOBAK API description')
+      .setTitle('Title')
+      .setDescription('Description')
       .setVersion('1.0.0')
       .addTag('auth')
       .build(),

@@ -43,4 +43,10 @@ export class User {
     example: null,
   })
   resetCode: string;
+
+  @Column({ nullable: true })
+  @ApiProperty({
+    example: null,
+  })
+  salaryDay: number;
 }

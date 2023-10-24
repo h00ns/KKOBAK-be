@@ -6,8 +6,8 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { SendResetCodeDto } from './dtos/send-reset-code.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { randomBytes } from 'crypto';
 import { PatchPasswordDto } from './dtos/patch-password.dto';
+import { randomBytes } from 'crypto';
 
 @Injectable()
 export class UserService {
@@ -53,7 +53,11 @@ export class UserService {
     await this.mailerService.sendMail({
       to: email,
       subject: '비밀번호 재설정 인증번호',
-      text: `인증번호 : ${resetCode}`,
+      template: 'reset-password',
+      context: {
+        email: email,
+        resetCode: resetCode,
+      },
     });
   }
 
