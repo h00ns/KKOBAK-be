@@ -24,7 +24,7 @@ export class ApiResInterceptor implements NestInterceptor {
         if (result || result === null) {
           return new ApiRes(result, message, code);
         } else {
-          return response;
+          return new ApiRes(response, message, code);
         }
       }),
     );

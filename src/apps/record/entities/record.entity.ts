@@ -1,10 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { User } from 'src/apps/user/entities/user.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'record' })
 export class Record {
@@ -32,9 +28,24 @@ export class Record {
   })
   type: 'income' | 'outcome';
 
-  @CreateDateColumn()
+  @Column()
   @ApiProperty({
-    example: '2023-10-16T14:30:00.000Z',
+    example: 2023,
   })
-  date: Date;
+  year: number;
+
+  @Column()
+  @ApiProperty({
+    example: 12,
+  })
+  month: number;
+
+  @Column()
+  @ApiProperty({
+    example: 31,
+  })
+  day: number;
+
+  @ManyToOne(() => User, (user) => user.records)
+  user: User;
 }

@@ -11,7 +11,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   password: '1234',
   database: 'KKOBAK',
   entities: [User, Record],
-  synchronize: true,
+  synchronize: false,
 };
 
 export default typeOrmConfig;

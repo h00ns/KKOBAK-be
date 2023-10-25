@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Record } from 'src/apps/record/entities/record.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -49,4 +51,7 @@ export class User {
     example: null,
   })
   salaryDay: number;
+
+  @OneToMany(() => Record, (record) => record.user)
+  records: Record;
 }
