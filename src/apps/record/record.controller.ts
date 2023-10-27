@@ -38,10 +38,10 @@ export class RecordController {
   ): Promise<ApiRes<GetRecordsResponseDto>> {
     const { id: userId } = req.user;
 
-    const record = await this.recordService.getRecords({ userId, year, month });
+    const result = await this.recordService.getRecords({ userId, year, month });
 
     return {
-      result: record,
+      result,
       message: '해당 달의 통계 조회 성공',
     };
   }

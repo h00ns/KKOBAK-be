@@ -21,7 +21,7 @@ export class RecordService {
     year: number;
     month: number;
   }): Promise<GetRecordsResponseDto> {
-    const data = await this.recordRepository.find({
+    const list = await this.recordRepository.find({
       where: {
         user: { id: userId },
         year,
@@ -29,11 +29,11 @@ export class RecordService {
       },
     });
 
-    const income = data
+    const income = list
       .filter((record) => record.type === 'income')
       .reduce((acc, cur) => acc + cur.value, 0);
 
-    const outcome = data
+    const outcome = list
       .filter((record) => record.type === 'outcome')
       .reduce((acc, cur) => acc + cur.value, 0);
 
@@ -43,6 +43,7 @@ export class RecordService {
       income,
       outcome,
       balance,
+      list,
     };
   }
 
