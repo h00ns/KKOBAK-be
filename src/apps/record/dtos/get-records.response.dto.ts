@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GetRecordResponseDto {
+export class GetRecordsResponseDto {
   @ApiProperty({
     example: 2000000,
   })

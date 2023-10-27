@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Record } from './entities/record.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { GetRecordResponseDto } from './dtos/get-record.response.dto';
+import { GetRecordsResponseDto } from './dtos/get-records.response.dto';
 
 @Injectable()
 export class RecordService {
@@ -11,7 +11,8 @@ export class RecordService {
     private recordRepository: Repository<Record>,
   ) {}
 
-  async getRecord({
+  // 해당 달의 통계 조회
+  async getRecords({
     userId,
     year,
     month,
@@ -19,7 +20,7 @@ export class RecordService {
     userId: number;
     year: number;
     month: number;
-  }): Promise<GetRecordResponseDto> {
+  }): Promise<GetRecordsResponseDto> {
     const data = await this.recordRepository.find({
       where: {
         user: { id: userId },
@@ -43,5 +44,52 @@ export class RecordService {
       outcome,
       balance,
     };
+  }
+
+  // 가계부 기록 생성
+  async createRecord({
+    title,
+    value,
+    type,
+    year,
+    month,
+    day,
+    user,
+  }: Partial<Record>) {
+    const record = this.recordRepository.create({
+      title,
+      value,
+      type,
+      year,
+      month,
+      day,
+      user, // or user: { id: userId }
+    });
+
+    return await this.recordRepository.save(record);
+  }
+
+  // 해당 일의 목록 조회
+  async getRecordDetail({
+    userId,
+    year,
+    month,
+    day,
+  }: {
+    userId: number;
+    year: number;
+    month: number;
+    day: number;
+  }) {
+    const list = await this.recordRepository.find({
+      where: {
+        user: { id: userId },
+        year,
+        month,
+        day,
+      },
+    });
+
+    return list;
   }
 }
