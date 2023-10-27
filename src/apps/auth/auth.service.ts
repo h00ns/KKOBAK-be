@@ -6,6 +6,7 @@ import { Payload } from './jwt/payload';
 export class AuthService {
   constructor(private jwtService: JwtService) {}
 
+  // token 생성
   async createToken({ id, email }: Payload) {
     const payload: Payload = { id, email };
 
@@ -18,6 +19,7 @@ export class AuthService {
     };
   }
 
+  // refresh token 검증
   verifyRefreshToken(refreshToken: string) {
     return this.jwtService.verify(refreshToken);
   }

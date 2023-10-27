@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Record } from 'src/apps/record/entities/record.entity';
 import { User } from 'src/apps/user/entities/user.entity';
 
 /** typeORM 설정 (MySQL) */
@@ -9,7 +10,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   username: 'hoon',
   password: '1234',
   database: 'KKOBAK',
-  entities: [User],
+  entities: [User, Record],
   synchronize: false,
 };
 

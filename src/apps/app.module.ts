@@ -5,6 +5,7 @@ import typeOrmConfig from 'src/config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import mailerConfig from 'src/config/mailer.config';
+import { RecordModule } from './record/record.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import mailerConfig from 'src/config/mailer.config';
     MailerModule.forRoot(mailerConfig),
     UserModule,
     AuthModule,
+    RecordModule,
   ],
   controllers: [],
   providers: [],
