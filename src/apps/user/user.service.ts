@@ -8,6 +8,7 @@ import { SendResetCodeDto } from './dtos/send-reset-code.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { PatchPasswordDto } from './dtos/patch-password.dto';
 import { randomBytes } from 'crypto';
+import { PatchSalaryDayDto } from './dtos/patch-salaryday.dto';
 
 @Injectable()
 export class UserService {
@@ -81,7 +82,7 @@ export class UserService {
   }
 
   // 월급일 변경
-  async patchSalaryDay({ id, salaryDay }: { id: number; salaryDay: number }) {
+  async patchSalaryDay(id: number, { salaryDay }: PatchSalaryDayDto) {
     await this.userRepository.update({ id }, { salaryDay });
   }
 }
