@@ -38,10 +38,10 @@ export class RecordController {
   ): Promise<ApiRes<GetRecordsResponseDto>> {
     const { id: userId } = req.user;
 
-    const record = await this.recordService.getRecords({ userId, year, month });
+    const result = await this.recordService.getRecords({ userId, year, month });
 
     return {
-      result: record,
+      result,
       message: '해당 달의 통계 조회 성공',
     };
   }
@@ -53,17 +53,14 @@ export class RecordController {
     @Req() req,
     @Body() { title, value, type, year, month, day }: CreateRecordDto,
   ) {
-    const { id } = req.user;
-    const user = await this.userService.findUserById({ id });
-
-    const record = this.recordService.createRecord({
+    const { id: userId } = req.user;
+    const record = this.recordService.createRecord(userId, {
       title,
       value,
       type,
       year,
       month,
       day,
-      user,
     });
 
     if (record) {

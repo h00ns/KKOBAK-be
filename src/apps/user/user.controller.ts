@@ -157,7 +157,7 @@ export class UserController {
     const user = await this.userService.findUserById({ id });
 
     if (user) {
-      await this.userService.patchSalaryDay({ id, salaryDay });
+      await this.userService.patchSalaryDay(id, { salaryDay });
 
       return {
         result: null,

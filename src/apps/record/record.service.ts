@@ -3,6 +3,7 @@ import { Record } from './entities/record.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GetRecordsResponseDto } from './dtos/get-records.response.dto';
+import { CreateRecordDto } from './dtos/create-record.dto';
 
 @Injectable()
 export class RecordService {
@@ -21,7 +22,7 @@ export class RecordService {
     year: number;
     month: number;
   }): Promise<GetRecordsResponseDto> {
-    const data = await this.recordRepository.find({
+    const list = await this.recordRepository.find({
       where: {
         user: { id: userId },
         year,
@@ -29,11 +30,11 @@ export class RecordService {
       },
     });
 
-    const income = data
+    const income = list
       .filter((record) => record.type === 'income')
       .reduce((acc, cur) => acc + cur.value, 0);
 
-    const outcome = data
+    const outcome = list
       .filter((record) => record.type === 'outcome')
       .reduce((acc, cur) => acc + cur.value, 0);
 
@@ -43,19 +44,15 @@ export class RecordService {
       income,
       outcome,
       balance,
+      list,
     };
   }
 
   // 가계부 기록 생성
-  async createRecord({
-    title,
-    value,
-    type,
-    year,
-    month,
-    day,
-    user,
-  }: Partial<Record>) {
+  async createRecord(
+    userId: number,
+    { title, value, type, year, month, day }: CreateRecordDto,
+  ) {
     const record = this.recordRepository.create({
       title,
       value,
@@ -63,7 +60,7 @@ export class RecordService {
       year,
       month,
       day,
-      user, // or user: { id: userId }
+      user: { id: userId },
     });
 
     return await this.recordRepository.save(record);
