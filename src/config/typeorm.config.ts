@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { Filter } from 'src/apps/filter/entities/filter.entity';
 import { Record } from 'src/apps/record/entities/record.entity';
 import { User } from 'src/apps/user/entities/user.entity';
 
@@ -10,7 +11,7 @@ const typeOrmConfig: TypeOrmModuleOptions = {
   username: 'hoon',
   password: '1234',
   database: 'KKOBAK',
-  entities: [User, Record],
+  entities: [User, Record, Filter],
   synchronize: false,
 };
 

@@ -17,6 +17,7 @@ import { ApiRes } from 'src/dtos/api-response.dto';
 import { CreateRecordDto } from './dtos/create-record.dto';
 import { UserService } from '../user/user.service';
 import { GetRecordDetailResponseDto } from './dtos/get-record-detail.response.dto';
+import { FilterService } from '../filter/filter.service';
 
 @ApiTags('record')
 @Controller('record')
@@ -24,6 +25,7 @@ export class RecordController {
   constructor(
     readonly recordService: RecordService,
     readonly userService: UserService,
+    readonly filterService: FilterService,
   ) {}
 
   @Get()
@@ -51,10 +53,17 @@ export class RecordController {
   @ApiOperation({ summary: '해당 달 가계부 기록 생성' })
   async createRecord(
     @Req() req,
-    @Body() { title, value, type, year, month, day }: CreateRecordDto,
+    @Body()
+    { title, value, type, year, month, day, code }: CreateRecordDto,
   ) {
+    const { id: filterId } = await this.filterService.getFilterByCode(code);
+
+    if (!filterId) {
+      throw new HttpException('잘못된 코드입니다.', HttpStatus.BAD_REQUEST);
+    }
+
     const { id: userId } = req.user;
-    const record = this.recordService.createRecord(userId, {
+    const record = this.recordService.createRecord(userId, filterId, {
       title,
       value,
       type,
@@ -70,7 +79,7 @@ export class RecordController {
       };
     }
 
-    throw new HttpException('작성에 실패했습니다.', HttpStatus.BAD_REQUEST);
+    throw new HttpException('생성에 실패했습니다.', HttpStatus.BAD_REQUEST);
   }
 
   @Get('/detail')

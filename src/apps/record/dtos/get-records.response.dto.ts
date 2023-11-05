@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Filter } from 'src/apps/filter/entities/filter.entity';
 
 export class GetRecordsResponseDto {
   @ApiProperty({
@@ -27,6 +28,11 @@ export class GetRecordsResponseDto {
       year: 2023,
       month: 12,
       day: 12,
+      filter: {
+        id: 1,
+        name: '월급',
+        code: 101,
+      },
     }),
   })
   list: {
@@ -37,5 +43,6 @@ export class GetRecordsResponseDto {
     year: number;
     month: number;
     day: number;
+    filter: Filter;
   }[];
 }
