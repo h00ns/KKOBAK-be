@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { ApiResInterceptor } from './interceptors/api-response-interceptor';
 import { HttpExceptionFilter } from './filters/http-exception-filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { FilterService } from './apps/filter/filter.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -37,6 +38,10 @@ async function bootstrap() {
       .build(),
   );
   SwaggerModule.setup('api', app, document); // http://localhost:3000/api 로 접근가능
+
+  // filter initial data setting
+  const filterService = app.get(FilterService);
+  await filterService.createInitialFilter();
 
   await app.listen(3000);
 }

@@ -37,4 +37,10 @@ export class CreateRecordDto {
   })
   @IsNumber()
   day: number;
+
+  @ApiProperty({
+    example: 201,
+  })
+  @IsNumber()
+  code: number;
 }

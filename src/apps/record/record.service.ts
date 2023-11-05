@@ -28,6 +28,7 @@ export class RecordService {
         year,
         month,
       },
+      relations: ['filter'],
     });
 
     const income = list
@@ -51,7 +52,8 @@ export class RecordService {
   // 가계부 기록 생성
   async createRecord(
     userId: number,
-    { title, value, type, year, month, day }: CreateRecordDto,
+    filterId: number,
+    { title, value, type, year, month, day }: Omit<CreateRecordDto, 'code'>,
   ) {
     const record = this.recordRepository.create({
       title,
@@ -61,6 +63,7 @@ export class RecordService {
       month,
       day,
       user: { id: userId },
+      filter: { id: filterId },
     });
 
     return await this.recordRepository.save(record);
@@ -85,6 +88,7 @@ export class RecordService {
         month,
         day,
       },
+      relations: ['filter'],
     });
 
     return list;

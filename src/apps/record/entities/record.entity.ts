@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Filter } from 'src/apps/filter/entities/filter.entity';
 import { User } from 'src/apps/user/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -48,4 +49,7 @@ export class Record {
 
   @ManyToOne(() => User, (user) => user.records)
   user: User;
+
+  @ManyToOne(() => Filter, (filter) => filter.records)
+  filter: Filter;
 }
