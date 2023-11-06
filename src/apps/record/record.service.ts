@@ -93,4 +93,22 @@ export class RecordService {
 
     return list;
   }
+
+  // 가계부 기록 삭제
+  async deleteRecord(userId: number, id: number) {
+    const record = await this.recordRepository.findOne({
+      where: {
+        user: { id: userId },
+        id,
+      },
+    });
+
+    // 해당 유저의 record가 존재한다면 삭제
+    if (record) {
+      await this.recordRepository.delete({ id });
+      return true;
+    }
+
+    return false;
+  }
 }

@@ -1,15 +1,23 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
+  Param,
   Post,
   Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RecordService } from './record.service';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { GetRecordsResponseDto } from './dtos/get-records.response.dto';
@@ -103,5 +111,24 @@ export class RecordController {
       result: { list },
       message: '해당 일의 목록 조회 성공',
     };
+  }
+
+  @Delete('/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: '가계부 기록 삭제' })
+  @ApiParam({ name: 'id', example: 1 })
+  async deleteRecord(@Req() req, @Param('id') id: number) {
+    const { id: userId } = req.user;
+
+    const isSuccess = await this.recordService.deleteRecord(userId, id);
+
+    if (isSuccess) {
+      return {
+        result: null,
+        message: '가계부 기록 삭제 성공',
+      };
+    }
+
+    throw new HttpException('삭제에 실패했습니다.', HttpStatus.BAD_REQUEST);
   }
 }
