@@ -25,4 +25,9 @@ export class GetUserInfoResponseDto {
     example: '2023-10-24T11:06:27.515Z',
   })
   createdAt: Date;
+
+  @ApiProperty({
+    example: null,
+  })
+  profileImg: string;
 }

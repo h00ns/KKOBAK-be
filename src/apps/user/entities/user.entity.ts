@@ -54,4 +54,10 @@ export class User {
 
   @OneToMany(() => Record, (record) => record.user)
   records: Record;
+
+  @Column({ nullable: true })
+  @ApiProperty({
+    example: null,
+  })
+  profileImg: string;
 }
