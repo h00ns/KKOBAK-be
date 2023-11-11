@@ -8,7 +8,9 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { SignUpDto } from './dtos/signup.dto';
@@ -21,11 +23,16 @@ import { CheckEmailValidResponseDto } from './dtos/check-email-valid.response.dt
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { GetUserInfoResponseDto } from './dtos/get-user-info-response.dto';
 import { PatchSalaryDayDto } from './dtos/patch-salaryday.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { S3Service } from '../s3/s3.service';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(readonly userService: UserService) {}
+  constructor(
+    readonly userService: UserService,
+    readonly s3Service: S3Service,
+  ) {}
 
   @Get('/')
   @UseGuards(JwtAuthGuard)
@@ -169,5 +176,27 @@ export class UserController {
       '유저가 존재하지 않습니다.',
       HttpStatus.BAD_REQUEST,
     );
+  }
+
+  @Patch('/profile')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('profileImg'))
+  @ApiOperation({ summary: '프로필 이미지 변경' })
+  async patchProfileImg(
+    @Req() req,
+    @UploadedFile() profileImg: Express.Multer.File,
+  ) {
+    const { id } = req.user;
+
+    const fileUrl = await this.s3Service.uploadFileS3(id, profileImg);
+
+    this.userService.patchProfileImg(id, fileUrl);
+
+    return {
+      result: {
+        profileImg: fileUrl,
+      },
+      message: '프로필 이미지가 변경되었습니다.',
+    };
   }
 }

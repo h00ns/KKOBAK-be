@@ -85,4 +85,9 @@ export class UserService {
   async patchSalaryDay(id: number, { salaryDay }: PatchSalaryDayDto) {
     await this.userRepository.update({ id }, { salaryDay });
   }
+
+  // 프로필 이미지 변경
+  async patchProfileImg(id: number, profileImg: string) {
+    await this.userRepository.update({ id }, { profileImg });
+  }
 }
